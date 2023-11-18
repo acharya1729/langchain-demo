@@ -10,10 +10,8 @@ from app.langchain_init import document_loader, text_splitter, openai_embeddings
 app = FastAPI()
 
 
-def process_question(question, document, retriever):
+def process_question(question, retriever):
     q = "".join(question.values())
-    docs = "\n\n".join(doc.page_content for doc in document)
-
     rag_chain = ({"context": retriever | format_docs, "question": RunnablePassthrough()} | rag_prompt | llm | StrOutputParser())
     answer = rag_chain.invoke(q)
 
@@ -43,7 +41,7 @@ async def question_answering(document_file: UploadFile, questions_file: UploadFi
 
         # Process each question
         for question in questions_data['questions']:
-            answer = process_question(question, document, retriever)
+            answer = process_question(question, retriever)
             answers.append(answer)
 
         return answers
