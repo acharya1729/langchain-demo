@@ -1,5 +1,4 @@
 # app/langchain_init.py
-from langchain.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
@@ -9,7 +8,6 @@ import os
 rag_prompt = hub.pull("rlm/rag-prompt")
 
 # Initialize Langchain components
-document_loader = WebBaseLoader("https://compliancereportszania.blob.core.windows.net/soc2-reports/safebase-short.json")
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 

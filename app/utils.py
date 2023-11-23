@@ -1,6 +1,8 @@
 # app/utils.py
 import os
 import json
+from langchain.document_loaders import JSONLoader, PyPDFLoader, UnstructuredPDFLoader
+
 from fastapi import UploadFile
 
 UPLOAD_DIR = "uploads"
@@ -24,3 +26,17 @@ def save_uploaded_files(document_file, questions_file):
 def load_questions(questions_file_path):
     with open(questions_file_path, 'r') as json_file:
         return json.load(json_file)
+
+
+def load_document(document_file_path):
+    if document_file_path.endswith('.json'):
+        # Load JSON file
+        data = JSONLoader(document_file_path, jq_schema='.',text_content=False)
+        return data.load()
+    elif document_file_path.endswith('.pdf'):
+        # Load PDF file
+        loader = PyPDFLoader(document_file_path)
+        return loader.load()
+
+    else:
+        raise ValueError("Unsupported file format. Only JSON and PDF files are supported.")
